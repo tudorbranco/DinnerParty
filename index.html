@@ -50,7 +50,7 @@ overflow:hidden;
 
 .bar{
 height:100%;
-width:20%;
+width:0%;
 background:#22c55e;
 transition:.3s;
 }
@@ -107,6 +107,21 @@ margin-top:10px;
 min-height:20px;
 }
 
+.input-field{
+width:100%;
+padding:14px;
+border-radius:12px;
+border:none;
+background:rgba(255,255,255,0.1);
+color:white;
+font-size:16px;
+margin-bottom:20px;
+box-sizing:border-box;
+outline:none;
+}
+
+.input-field::placeholder { color: rgba(255,255,255,0.5); }
+
 .confetti{
 position:fixed;
 width:8px;
@@ -151,7 +166,6 @@ text-align:center;
 
 <div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1546549032-9571cd6b27df"> Platou rece </div>
 <div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1521305916504-4a1121188589"> Bruschete </div>
-<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d"> Ciuperci </div>
 
 <button class="btn yes" onclick="go(3)">Continuă</button>
 </div>
@@ -159,29 +173,44 @@ text-align:center;
 <div id="p3" class="hidden">
 <h1>Fel principal 🍽️</h1>
 
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1528736235302-52922df5c122"> Arabesc 🧆 </div>
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141"> Italian 🇮🇹 </div>
 <div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092"> Grecesc 🇬🇷 </div>
-<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1604908554027-4f5b1b2c7d2f"> Pireu 🥘 </div>
-<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af"> Pasta 🍝 </div>
 
 <button class="btn yes" onclick="go(4)">Continuă</button>
 </div>
 
 <div id="p4" class="hidden">
-<h1>Desert & băuturi 🍰</h1>
+<h1>Desert 🍰</h1>
 
 <div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b"> Specialitatea 👨‍🍳 </div>
-<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348"> Bere 🍺 </div>
-<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e"> Vin 🍷 </div>
-<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1546171753-f90425340c7e"> Amaretto 🍹 </div>
-<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1546171753-f90425340c7e"> Hugo 🍹 </div>
 
-<button class="btn yes" onclick="go(5)">Finalizează</button>
+<button class="btn yes" onclick="go(5)">Continuă</button>
 </div>
 
 <div id="p5" class="hidden">
+<h1>Băuturi 🥂</h1>
+
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348"> Bere 🍺 </div>
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e"> Vin 🍷 </div>
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1546171753-f90425340c7e"> Amaretto 🍹 </div>
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1556881286-fc6915169721"> Hugo 🥂 </div>
+
+<button class="btn yes" onclick="go(6)">Continuă</button>
+</div>
+
+<div id="p6" class="hidden">
+<h1>Confirmare participare ✍️</h1>
+<p>Introdu numele tău pentru a trimite opțiunile alese:</p>
+<input type="text" id="numeParticipant" class="input-field" placeholder="Numele tău complet" required>
+
+<button class="btn yes" onclick="submitForm()">Trimite răspunsul 🚀</button>
+</div>
+
+<div id="p7" class="hidden">
 <div class="end">🙋‍♂️</div>
 <h1 style="text-align:center">Event Confirmed</h1>
-<p style="text-align:center">Te aștept la masă. Adresa este Strada I.L. Caragiale 72B, Apartament 91.</p>
+<p style="text-align:center">Te aștept la masă!</p>
 </div>
 
 </div>
@@ -211,17 +240,38 @@ noBtn.innerText=["Nu","sigur?","nope","💀"][Math.floor(Math.random()*4)];
 });
 
 function go(p){
-for(let i=1;i<=5;i++){
+for(let i=1;i<=7;i++){
 document.getElementById("p"+i).classList.add("hidden");
 }
 document.getElementById("p"+p).classList.remove("hidden");
-bar.style.width=(p-1)*25+"%";
-if(p===5) confetti();
+bar.style.width=(p-1)*16.66+"%";
+if(p===7) confetti();
 }
 
 function select(el){
 el.parentNode.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));
 el.classList.add("selected");
+}
+
+function submitForm(){
+const nume = document.getElementById("numeParticipant").value || "Anonim";
+const selections = Array.from(document.querySelectorAll('.selected')).map(el => el.innerText.trim());
+
+const emailCatre = "tudorbrancoveanu@gmail.com"; 
+
+fetch(`https://formsubmit.co/ajax/${emailCatre}`, {
+    method: "POST",
+    headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+        Nume: nume,
+        Alegeri: selections.join(', ')
+    })
+});
+
+go(7);
 }
 
 function confetti(){
