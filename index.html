@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Private Dinner Experience</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+body{
+margin:0;
+font-family:Inter;
+background: radial-gradient(circle at top, #0b1220, #020617);
+color:white;
+overflow:hidden;
+}
+
+.app{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.card{
+width:92%;
+max-width:680px;
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(18px);
+border-radius:24px;
+padding:26px;
+box-shadow:0 30px 100px rgba(0,0,0,0.6);
+position:relative;
+animation:fade .5s ease;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(20px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+.progress{
+height:6px;
+background:rgba(255,255,255,0.08);
+border-radius:999px;
+margin-bottom:18px;
+overflow:hidden;
+}
+
+.bar{
+height:100%;
+width:20%;
+background:#22c55e;
+transition:.3s;
+}
+
+.btn{
+padding:12px 16px;
+border:none;
+border-radius:14px;
+font-weight:600;
+cursor:pointer;
+margin:6px;
+}
+
+.yes{background:#22c55e;color:white;}
+.no{
+background:#ef4444;
+color:white;
+position:absolute;
+transition:.15s;
+}
+
+.option{
+display:flex;
+gap:12px;
+align-items:center;
+padding:10px;
+margin:10px 0;
+border-radius:16px;
+background:rgba(255,255,255,0.08);
+cursor:pointer;
+transition:.2s;
+}
+
+.option:hover{
+transform:scale(1.02);
+background:rgba(255,255,255,0.16);
+}
+
+.option img{
+width:72px;
+height:72px;
+object-fit:cover;
+border-radius:14px;
+}
+
+.selected{
+background:#22c55e !important;
+}
+
+.ai{
+font-size:14px;
+opacity:.7;
+margin-top:10px;
+min-height:20px;
+}
+
+.confetti{
+position:fixed;
+width:8px;
+height:8px;
+top:0;
+animation:fall 2s linear forwards;
+}
+
+@keyframes fall{
+to{transform:translateY(100vh) rotate(720deg);opacity:0}
+}
+
+.end{
+font-size:70px;
+text-align:center;
+}
+
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+<div class="card">
+
+<div class="progress"><div class="bar" id="bar"></div></div>
+
+<div id="p1">
+<h1>🍽️ Private Dinner Experience</h1>
+
+<p>Ai fost invitat la un eveniment culinar exclusiv.</p>
+
+<div class="ai" id="aiText"></div>
+
+<button class="btn yes" onclick="go(2)">Accept invitația 🍻</button>
+<button class="btn no" id="noBtn">Refuz 😏</button>
+</div>
+
+<div id="p2" class="hidden">
+<h1>Aperitiv 🧀</h1>
+
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1546549032-9571cd6b27df"> Platou rece </div>
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1521305916504-4a1121188589"> Bruschete </div>
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d"> Ciuperci </div>
+
+<button class="btn yes" onclick="go(3)">Continuă</button>
+</div>
+
+<div id="p3" class="hidden">
+<h1>Fel principal 🍽️</h1>
+
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092"> Grecesc 🇬🇷 </div>
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1604908554027-4f5b1b2c7d2f"> Pireu 🥘 </div>
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af"> Pasta 🍝 </div>
+
+<button class="btn yes" onclick="go(4)">Continuă</button>
+</div>
+
+<div id="p4" class="hidden">
+<h1>Desert & băuturi 🍰</h1>
+
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b"> Specialitatea 👨‍🍳 </div>
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348"> Bere 🍺 </div>
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e"> Vin 🍷 </div>
+<div class="option" onclick="select(this)"> <img src="https://images.unsplash.com/photo-1546171753-f90425340c7e"> Amaretto 🍹 </div>
+
+<button class="btn yes" onclick="go(5)">Finalizează</button>
+</div>
+
+<div id="p5" class="hidden">
+<div class="end">🙋‍♂️</div>
+<h1 style="text-align:center">Event Confirmed</h1>
+<p style="text-align:center">Te aștept la masă.</p>
+</div>
+
+</div>
+</div>
+
+<script>
+
+const noBtn = document.getElementById("noBtn");
+const bar = document.getElementById("bar");
+const aiText = document.getElementById("aiText");
+
+let txt = "AI Host: analizez invitația... recomand: acceptă 😏";
+let i = 0;
+
+function type(){
+if(i < txt.length){
+aiText.innerHTML += txt[i++];
+setTimeout(type,30);
+}
+}
+type();
+
+noBtn.addEventListener("mouseover",()=>{
+noBtn.style.left=Math.random()*80+"%";
+noBtn.style.top=Math.random()*80+"%";
+noBtn.innerText=["Nu","sigur?","nope","💀"][Math.floor(Math.random()*4)];
+});
+
+function go(p){
+for(let i=1;i<=5;i++){
+document.getElementById("p"+i).classList.add("hidden");
+}
+document.getElementById("p"+p).classList.remove("hidden");
+bar.style.width=(p-1)*25+"%";
+if(p===5) confetti();
+}
+
+function select(el){
+el.parentNode.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));
+el.classList.add("selected");
+}
+
+function confetti(){
+for(let i=0;i<80;i++){
+let c=document.createElement("div");
+c.className="confetti";
+c.style.left=Math.random()*100+"vw";
+c.style.background=["#22c55e","#60a5fa","#f97316","#f472b6"][Math.floor(Math.random()*4)];
+document.body.appendChild(c);
+setTimeout(()=>c.remove(),3000);
+}
+}
+
+</script>
+
+</body>
+</html>
